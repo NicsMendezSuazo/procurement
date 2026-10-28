@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "Drmc.Procurement.Application/1.0.0": {
+        "dependencies": {
+          "Drmc.Procurement.Domain": "1.0.0"
+        },
+        "runtime": {
+          "Drmc.Procurement.Application.dll": {}
+        }
+      },
+      "Drmc.Procurement.Domain/1.0.0": {
+        "runtime": {
+          "Drmc.Procurement.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Drmc.Procurement.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Drmc.Procurement.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

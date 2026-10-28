@@ -1,0 +1,15 @@
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Application\bin\Debug\net10.0\Drmc.Procurement.Application.deps.json
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Application\bin\Debug\net10.0\Drmc.Procurement.Application.dll
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Application\bin\Debug\net10.0\Drmc.Procurement.Application.pdb
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Application\bin\Debug\net10.0\Drmc.Procurement.Domain.dll
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Application\bin\Debug\net10.0\Drmc.Procurement.Domain.pdb
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Application\obj\Debug\net10.0\Drmc.Procurement.Application.csproj.AssemblyReference.cache
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Application\obj\Debug\net10.0\Drmc.Procurement.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Application\obj\Debug\net10.0\Drmc.Procurement.Application.AssemblyInfoInputs.cache
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Application\obj\Debug\net10.0\Drmc.Procurement.Application.AssemblyInfo.cs
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Application\obj\Debug\net10.0\Drmc.Procurement.Application.csproj.CoreCompileInputs.cache
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Application\obj\Debug\net10.0\Drmc.Pro.A91EAF17.Up2Date
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Application\obj\Debug\net10.0\Drmc.Procurement.Application.dll
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Application\obj\Debug\net10.0\refint\Drmc.Procurement.Application.dll
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Application\obj\Debug\net10.0\Drmc.Procurement.Application.pdb
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Application\obj\Debug\net10.0\ref\Drmc.Procurement.Application.dll

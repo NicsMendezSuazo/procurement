@@ -1,0 +1,11 @@
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Domain\bin\Debug\net10.0\Drmc.Procurement.Domain.deps.json
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Domain\bin\Debug\net10.0\Drmc.Procurement.Domain.dll
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Domain\bin\Debug\net10.0\Drmc.Procurement.Domain.pdb
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Domain\obj\Debug\net10.0\Drmc.Procurement.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Domain\obj\Debug\net10.0\Drmc.Procurement.Domain.AssemblyInfoInputs.cache
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Domain\obj\Debug\net10.0\Drmc.Procurement.Domain.AssemblyInfo.cs
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Domain\obj\Debug\net10.0\Drmc.Procurement.Domain.csproj.CoreCompileInputs.cache
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Domain\obj\Debug\net10.0\Drmc.Procurement.Domain.dll
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Domain\obj\Debug\net10.0\refint\Drmc.Procurement.Domain.dll
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Domain\obj\Debug\net10.0\Drmc.Procurement.Domain.pdb
+C:\Users\HR-DEV\procurement\procurement\src\backend\src\Core\Drmc.Procurement.Domain\obj\Debug\net10.0\ref\Drmc.Procurement.Domain.dll

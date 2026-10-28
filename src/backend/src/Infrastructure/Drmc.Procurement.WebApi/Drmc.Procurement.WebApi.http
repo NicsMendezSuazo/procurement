@@ -1,0 +1,6 @@
+@Drmc.Procurement.WebApi_HostAddress = http://localhost:5141
+
+GET {{Drmc.Procurement.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
