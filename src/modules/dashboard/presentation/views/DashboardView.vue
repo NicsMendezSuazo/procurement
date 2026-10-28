@@ -9,17 +9,16 @@ import {
   FileText,
   Users,
   TrendingUp,
-  TrendingDown,
   Loader2,
   ArrowRight,
 } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
-import AdminLayout from '../../../shared/layouts/AdminLayout.vue'
-import { formatCurrency, formatDate } from '../../../core/utils/formatters'
-import { POStatus, POStatusLabels, ModeOfProcurementLabels } from '../../purchase-orders/domain/enums/POStatus'
-import type { PurchaseOrder } from '../../purchase-orders/domain/models/PurchaseOrder'
-import { GetPurchaseOrdersUseCase } from '../../purchase-orders/application/usecases/GetPurchaseOrdersUseCase'
-import { MockPurchaseOrderRepository } from '../../purchase-orders/infrastructure/repositories/MockPurchaseOrderRepository'
+import AdminLayout from '../../../../shared/layouts/AdminLayout.vue'
+import { formatCurrency, formatDate } from '../../../../core/utils/formatters'
+import { POStatus, POStatusLabels, ModeOfProcurementLabels } from '../../../purchase-orders/domain/enums/POStatus'
+import type { PurchaseOrder } from '../../../purchase-orders/domain/models/PurchaseOrder'
+import { GetPurchaseOrdersUseCase } from '../../../purchase-orders/application/usecases/GetPurchaseOrdersUseCase'
+import { MockPurchaseOrderRepository } from '../../../purchase-orders/infrastructure/repositories/MockPurchaseOrderRepository'
 
 const orders = ref<PurchaseOrder[]>([])
 const isLoading = ref(true)
@@ -53,12 +52,12 @@ const metrics = computed(() => {
 const recentOrders = computed(() => orders.value.slice(0, 5))
 
 const statusDistribution = computed(() => {
-  const statuses = Object.values(POStatus)
-  return statuses.map((status) => ({
+  const statuses: POStatus[] = Object.values(POStatus)
+  return statuses.map((status: POStatus) => ({
     status,
     label: POStatusLabels[status],
-    count: orders.value.filter((o) => o.status === status).length,
-    pct: orders.value.length ? Math.round((orders.value.filter((o) => o.status === status).length / orders.value.length) * 100) : 0,
+    count: orders.value.filter((o: PurchaseOrder) => o.status === status).length,
+    pct: orders.value.length ? Math.round((orders.value.filter((o: PurchaseOrder) => o.status === status).length / orders.value.length) * 100) : 0,
   }))
 })
 
@@ -102,7 +101,6 @@ const quickLinks = [
         <p class="text-sm text-slate-500 mt-1">Davao Regional Medical Center — BAC Secretariat Portal</p>
       </div>
 
-      <!-- KPI Cards -->
       <div v-if="isLoading" class="flex items-center justify-center py-20">
         <Loader2 :size="32" class="animate-spin text-brand-500" />
       </div>
@@ -124,7 +122,6 @@ const quickLinks = [
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          <!-- Status Distribution -->
           <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
             <h2 class="text-base font-semibold text-slate-800 mb-4">Status Distribution</h2>
             <div class="space-y-3">
@@ -140,7 +137,6 @@ const quickLinks = [
             </div>
           </div>
 
-          <!-- Pending Value -->
           <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
             <h2 class="text-base font-semibold text-slate-800 mb-4">Pending BAC Value</h2>
             <div class="flex items-center gap-3 mb-4">
@@ -158,7 +154,6 @@ const quickLinks = [
             </div>
           </div>
 
-          <!-- Quick Links -->
           <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
             <h2 class="text-base font-semibold text-slate-800 mb-4">Quick Actions</h2>
             <div class="space-y-2">
@@ -176,7 +171,6 @@ const quickLinks = [
           </div>
         </div>
 
-        <!-- Recent Orders -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
             <h2 class="text-base font-semibold text-slate-800">Recent Purchase Orders</h2>

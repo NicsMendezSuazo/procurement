@@ -10,8 +10,8 @@ import {
   Save,
   Check,
 } from 'lucide-vue-next'
-import AdminLayout from '../../../shared/layouts/AdminLayout.vue'
-import BaseButton from '../../../shared/components/BaseButton.vue'
+import AdminLayout from '../../../../shared/layouts/AdminLayout.vue'
+import BaseButton from '../../../../shared/components/BaseButton.vue'
 
 const activeTab = ref('profile')
 
@@ -71,12 +71,12 @@ function saveSettings() {
   setTimeout(() => { saved.value = false }, 2500)
 }
 
-const settingsMap: Record<string, typeof profile | typeof organization | typeof notifications | typeof security | typeof system> = {
-  profile,
-  organization,
-  notifications,
-  security,
-  system,
+function toggleNotification(key: string): void {
+  (notifications as Record<string, boolean>)[key] = !(notifications as Record<string, boolean>)[key]
+}
+
+function prettifyLabel(key: string): string {
+  return key.replace(/([A-Z])/g, ' $1').replace(/^./, (c) => c.toUpperCase())
 }
 </script>
 
@@ -94,7 +94,6 @@ const settingsMap: Record<string, typeof profile | typeof organization | typeof 
 
       <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div class="flex flex-col md:flex-row">
-          <!-- Tabs Sidebar -->
           <div class="md:w-56 border-b md:border-b-0 md:border-r border-slate-200 bg-slate-50 p-2">
             <nav class="flex md:flex-col gap-1 overflow-x-auto">
               <button
@@ -114,7 +113,6 @@ const settingsMap: Record<string, typeof profile | typeof organization | typeof 
             </nav>
           </div>
 
-          <!-- Tab Content -->
           <div class="flex-1 p-6">
             <!-- Profile -->
             <div v-if="activeTab === 'profile'" class="space-y-4">
@@ -148,19 +146,19 @@ const settingsMap: Record<string, typeof profile | typeof organization | typeof 
 
             <!-- Notifications -->
             <div v-else-if="activeTab === 'notifications'" class="space-y-3">
-              <label v-for="(val, key) in notifications" :key="key" class="flex items-center justify-between p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors">
+              <div v-for="(val, key) in notifications" :key="key" class="flex items-center justify-between p-3 border border-slate-200 rounded-lg">
                 <div>
-                  <p class="text-sm font-medium text-slate-700 capitalize">{{ key.replace(/([A-Z])/g, ' $1').replace(/^./, c => c.toUpperCase()) }}</p>
+                  <p class="text-sm font-medium text-slate-700">{{ prettifyLabel(String(key)) }}</p>
                   <p class="text-xs text-slate-400">Receive notifications for this event</p>
                 </div>
                 <button
                   type="button"
                   :class="['relative inline-flex h-6 w-11 items-center rounded-full transition-colors', val ? 'bg-brand-600' : 'bg-slate-300']"
-                  @click="(notifications as Record<string, boolean>)[key] = !val"
+                  @click="toggleNotification(String(key))"
                 >
                   <span :class="['inline-block h-4 w-4 transform rounded-full bg-white transition-transform', val ? 'translate-x-6' : 'translate-x-1']" />
                 </button>
-              </label>
+              </div>
             </div>
 
             <!-- Security -->
@@ -207,12 +205,12 @@ const settingsMap: Record<string, typeof profile | typeof organization | typeof 
 
             <!-- Save Bar -->
             <div class="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-slate-200">
-              <transition enter-active-class="transition duration-200" enter-from-class="opacity-0" enter-to-class="opacity-100">
+              <Transition enter-active-class="transition duration-200" enter-from-class="opacity-0" enter-to-class="opacity-100">
                 <span v-if="saved" class="text-sm text-emerald-600 flex items-center gap-1.5 mr-auto">
                   <Check :size="16" /> Settings saved successfully
                 </span>
-              </transition>
-              <BaseButton variant="secondary" @click="() => { /* reset would go here */ }">Reset</BaseButton>
+              </Transition>
+              <BaseButton variant="secondary">Reset</BaseButton>
               <BaseButton variant="primary" @click="saveSettings"><Save :size="16" /> Save Changes</BaseButton>
             </div>
           </div>

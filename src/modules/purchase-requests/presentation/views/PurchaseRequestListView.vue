@@ -23,8 +23,6 @@ const {
   filteredRequests,
   metrics,
   resetFilters,
-  PRStatus,
-  PRStatusLabels,
 } = usePurchaseRequestList()
 
 const statusFilterOptions: { value: PRStatus | 'all'; label: string }[] = [

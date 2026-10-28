@@ -5,27 +5,27 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'dashboard',
-    component: () => import('../modules/dashboard/presentation/views/DashboardView.vue'),
+    component: () => import('../../modules/dashboard/presentation/views/DashboardView.vue'),
   },
   {
     path: '/purchase-requests',
     name: 'purchase-requests',
-    component: () => import('../modules/purchase-requests/presentation/views/PurchaseRequestListView.vue'),
+    component: () => import('../../modules/purchase-requests/presentation/views/PurchaseRequestListView.vue'),
   },
   {
     path: '/purchase-orders',
     name: 'purchase-orders',
-    component: () => import('../modules/purchase-orders/presentation/views/PurchaseOrderListView.vue'),
+    component: () => import('../../modules/purchase-orders/presentation/views/PurchaseOrderListView.vue'),
   },
   {
     path: '/suppliers',
     name: 'suppliers',
-    component: () => import('../modules/suppliers/presentation/views/SupplierListView.vue'),
+    component: () => import('../../modules/suppliers/presentation/views/SupplierListView.vue'),
   },
   {
     path: '/settings',
     name: 'settings',
-    component: () => import('../modules/settings/presentation/views/SettingsView.vue'),
+    component: () => import('../../modules/settings/presentation/views/SettingsView.vue'),
   },
 ]
 

@@ -16,7 +16,7 @@ import AdminLayout from '../../../../shared/layouts/AdminLayout.vue'
 import BaseBadge from '../../../../shared/components/BaseBadge.vue'
 import BaseButton from '../../../../shared/components/BaseButton.vue'
 import { useSupplierList } from '../viewmodels/useSupplierList'
-import { SupplierStatus, SupplierStatusLabels, SupplierStatusVariants, type SupplierStatusVariant } from '../../domain/enums/SupplierStatus'
+import { SupplierStatusLabels, SupplierStatusVariants, type SupplierStatusVariant } from '../../domain/enums/SupplierStatus'
 import { formatCurrency, formatDate } from '../../../../core/utils/formatters'
 
 const {
@@ -27,7 +27,6 @@ const {
   metrics,
   categories,
   resetFilters,
-  SupplierStatus,
 } = useSupplierList()
 
 const kpiCards = [
@@ -87,7 +86,6 @@ const colorClasses: Record<string, { bg: string; text: string; ring: string }> =
         </div>
       </div>
 
-      <!-- Supplier Cards Grid -->
       <div v-if="isLoading" class="flex items-center justify-center py-20">
         <Loader2 :size="32" class="animate-spin text-brand-500" />
       </div>
