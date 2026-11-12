@@ -1,3 +1,6 @@
+using Drmc.Procurement.Application.Common.Cqrs;
+using MediatR;
+
 using Drmc.Procurement.Application.Features.PlanningYears.DTO;
 using Drmc.Procurement.Application.Features.PlanningYears.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -8,19 +11,18 @@ namespace Drmc.Procurement.WebApi.Controllers;
 [Route("api/[controller]")]
 public class PlanningYearsController : ControllerBase
 {
-    private readonly IPlanningYearService _planningYearService;
+    private readonly ISender _sender;
 
-    public PlanningYearsController(
-        IPlanningYearService planningYearService)
+    public PlanningYearsController(ISender sender)
     {
-        _planningYearService = planningYearService;
+        _sender = sender;
     }
 
     // GET: api/planningyears
     [HttpGet]
     public async Task<ActionResult<List<PlanningYearDto>>> GetAll()
     {
-        var planningYears = await _planningYearService.GetAllAsync();
+        var planningYears = await _sender.Send(new GetPlanningYearsQuery());
 
         return Ok(planningYears);
     }
@@ -29,7 +31,7 @@ public class PlanningYearsController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<PlanningYearDto>> GetById(int id)
     {
-        var planningYear = await _planningYearService.GetByIdAsync(id);
+        var planningYear = await _sender.Send(new GetPlanningYearQuery(id));
 
         if (planningYear is null)
         {
@@ -50,7 +52,7 @@ public class PlanningYearsController : ControllerBase
         try
         {
             var planningYear =
-                await _planningYearService.CreateAsync(request);
+                await _sender.Send(new CreatePlanningYearCommand(request));
 
             return CreatedAtAction(
                 nameof(GetById),
@@ -72,7 +74,7 @@ public class PlanningYearsController : ControllerBase
         try
         {
             var planningYear =
-                await _planningYearService.UpdateAsync(id, request);
+                await _sender.Send(new UpdatePlanningYearCommand(id, request));
 
             if (planningYear is null)
             {
@@ -98,9 +100,9 @@ public class PlanningYearsController : ControllerBase
     {
         try
         {
-            var updated = await _planningYearService.UpdateStatusAsync(
+            var updated = await _sender.Send(new UpdatePlanningYearStatusCommand(
                 id,
-                status);
+                status));
 
             if (!updated)
             {

@@ -3,6 +3,9 @@ using System.Security.Claims;
 
 using Drmc.Procurement.Application.Features.APP.Interfaces;
 
+using Drmc.Procurement.Application.Common.Cqrs;
+using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,11 +16,11 @@ namespace Drmc.Procurement.WebApi.Controllers;
 [Authorize(Roles = "Procurement Staff,System Administrator")]
 public class APPsController : ControllerBase
 {
-    private readonly IAPPService _appService;
+    private readonly ISender _sender;
 
-    public APPsController(IAPPService appService)
+    public APPsController(ISender sender)
     {
-        _appService = appService;
+        _sender = sender;
     }
 
     private int? GetUserId()
@@ -33,7 +36,7 @@ public class APPsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = await _appService.GetAllAsync();
+        var result = await _sender.Send(new GetAPPsQuery());
         return Ok(result);
     }
 
@@ -41,7 +44,7 @@ public class APPsController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var result = await _appService.GetByIdAsync(id);
+        var result = await _sender.Send(new GetAPPQuery(id));
 
         if (result == null)
         {
@@ -68,9 +71,9 @@ public class APPsController : ControllerBase
 
         try
         {
-            var result = await _appService.GenerateAsync(
+            var result = await _sender.Send(new GenerateAPPCommand(
                 planningYearId,
-                userId.Value);
+                userId.Value));
 
             return CreatedAtAction(
                 nameof(GetById),
@@ -100,9 +103,9 @@ public class APPsController : ControllerBase
 
         try
         {
-            var result = await _appService.AddReviewedPPMPsAsync(
+            var result = await _sender.Send(new AddReviewedPPMPsCommand(
                 id,
-                userId.Value);
+                userId.Value));
 
             return Ok(result);
         }

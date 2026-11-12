@@ -1,3 +1,6 @@
+using Drmc.Procurement.Application.Common.Cqrs;
+using MediatR;
+
 using Drmc.Procurement.Application.Features.Departments.DTO;
 using Drmc.Procurement.Application.Features.Departments.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -8,18 +11,18 @@ namespace Drmc.Procurement.WebApi.Controllers;
 [Route("api/[controller]")]
 public class DepartmentsController : ControllerBase
 {
-    private readonly IDepartmentService _departmentService;
+    private readonly ISender _sender;
 
-    public DepartmentsController(IDepartmentService departmentService)
+    public DepartmentsController(ISender sender)
     {
-        _departmentService = departmentService;
+        _sender = sender;
     }
 
     // GET: api/departments
     [HttpGet]
     public async Task<ActionResult<List<DepartmentDto>>> GetAll()
     {
-        var departments = await _departmentService.GetAllAsync();
+        var departments = await _sender.Send(new GetDepartmentsQuery());
 
         return Ok(departments);
     }
@@ -28,7 +31,7 @@ public class DepartmentsController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<DepartmentDto>> GetById(int id)
     {
-        var department = await _departmentService.GetByIdAsync(id);
+        var department = await _sender.Send(new GetDepartmentQuery(id));
 
         if (department is null)
         {
@@ -48,7 +51,7 @@ public class DepartmentsController : ControllerBase
     {
         try
         {
-            var department = await _departmentService.CreateAsync(request);
+            var department = await _sender.Send(new CreateDepartmentCommand(request));
 
             return CreatedAtAction(
                 nameof(GetById),
@@ -69,7 +72,7 @@ public class DepartmentsController : ControllerBase
     {
         try
         {
-            var department = await _departmentService.UpdateAsync(id, request);
+            var department = await _sender.Send(new UpdateDepartmentCommand(id, request));
 
             if (department is null)
             {
@@ -93,9 +96,9 @@ public class DepartmentsController : ControllerBase
         int id,
         [FromBody] bool isActive)
     {
-        var updated = await _departmentService.SetActiveStatusAsync(
+        var updated = await _sender.Send(new SetDepartmentActiveStatusCommand(
             id,
-            isActive);
+            isActive));
 
         if (!updated)
         {

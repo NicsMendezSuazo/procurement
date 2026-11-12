@@ -1,6 +1,9 @@
 using System.Security.Claims;
 using Drmc.Procurement.Application.Features.ProcurementCategories.DTO;
 using Drmc.Procurement.Application.Features.ProcurementCategories.Interfaces;
+using Drmc.Procurement.Application.Common.Cqrs;
+using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,19 +14,18 @@ namespace Drmc.Procurement.WebApi.Controllers;
 [Authorize]
 public class ProcurementCategoriesController : ControllerBase
 {
-    private readonly IProcurementCategoryService _categoryService;
+    private readonly ISender _sender;
 
-    public ProcurementCategoriesController(
-        IProcurementCategoryService categoryService)
+    public ProcurementCategoriesController(ISender sender)
     {
-        _categoryService = categoryService;
+        _sender = sender;
     }
 
     // GET: api/ProcurementCategories
     [HttpGet]
     public async Task<ActionResult<List<ProcurementCategoryDto>>> GetAll()
     {
-        var categories = await _categoryService.GetAllAsync();
+        var categories = await _sender.Send(new GetProcurementCategoriesQuery());
 
         return Ok(categories);
     }
@@ -32,7 +34,7 @@ public class ProcurementCategoriesController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<ProcurementCategoryDto>> GetById(int id)
     {
-        var category = await _categoryService.GetByIdAsync(id);
+        var category = await _sender.Send(new GetProcurementCategoryQuery(id));
 
         if (category is null)
         {
@@ -53,7 +55,7 @@ public class ProcurementCategoriesController : ControllerBase
     {
         try
         {
-            var history = await _categoryService.GetHistoryAsync(id);
+            var history = await _sender.Send(new GetProcurementCategoryHistoryQuery(id));
 
             return Ok(history);
         }
@@ -78,9 +80,9 @@ public class ProcurementCategoriesController : ControllerBase
 
         try
         {
-            var category = await _categoryService.CreateAsync(
+            var category = await _sender.Send(new CreateProcurementCategoryCommand(
                 request,
-                userId.Value);
+                userId.Value));
 
             return CreatedAtAction(
                 nameof(GetById),
@@ -109,10 +111,10 @@ public class ProcurementCategoriesController : ControllerBase
 
         try
         {
-            var category = await _categoryService.UpdateAsync(
+            var category = await _sender.Send(new UpdateProcurementCategoryCommand(
                 id,
                 request,
-                userId.Value);
+                userId.Value));
 
             if (category is null)
             {
@@ -146,10 +148,10 @@ public class ProcurementCategoriesController : ControllerBase
 
         try
         {
-            var updated = await _categoryService.SetActiveStatusAsync(
+            var updated = await _sender.Send(new SetProcurementCategoryActiveStatusCommand(
                 id,
                 isActive,
-                userId.Value);
+                userId.Value));
 
             if (!updated)
             {

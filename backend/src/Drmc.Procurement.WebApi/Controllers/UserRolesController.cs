@@ -1,3 +1,6 @@
+using Drmc.Procurement.Application.Common.Cqrs;
+using MediatR;
+
 using Drmc.Procurement.Application.Features.UserRoles.DTO;
 using Drmc.Procurement.Application.Features.UserRoles.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -8,11 +11,11 @@ namespace Drmc.Procurement.WebApi.Controllers;
 [Route("api/Users/{userId:int}/roles")]
 public class UserRolesController : ControllerBase
 {
-    private readonly IUserRoleService _service;
+    private readonly ISender _sender;
 
-    public UserRolesController(IUserRoleService service)
+    public UserRolesController(ISender sender)
     {
-        _service = service;
+        _sender = sender;
     }
 
     [HttpGet]
@@ -20,7 +23,7 @@ public class UserRolesController : ControllerBase
     {
         try
         {
-            return Ok(await _service.GetUserRolesAsync(userId));
+            return Ok(await _sender.Send(new GetUserRolesQuery(userId)));
         }
         catch (KeyNotFoundException ex)
         {
@@ -35,7 +38,7 @@ public class UserRolesController : ControllerBase
     {
         try
         {
-            var result = await _service.AssignRoleAsync(userId, request);
+            var result = await _sender.Send(new AssignUserRoleCommand(userId, request));
 
             return CreatedAtAction(
                 nameof(GetUserRoles),
@@ -55,7 +58,7 @@ public class UserRolesController : ControllerBase
     [HttpDelete("{roleId:int}")]
     public async Task<IActionResult> RemoveRole(int userId, int roleId)
     {
-        var removed = await _service.RemoveRoleAsync(userId, roleId);
+        var removed = await _sender.Send(new RemoveUserRoleCommand(userId, roleId));
 
         if (!removed)
             return NotFound(new

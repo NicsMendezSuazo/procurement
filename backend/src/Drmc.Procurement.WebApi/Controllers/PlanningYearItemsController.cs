@@ -1,3 +1,6 @@
+using Drmc.Procurement.Application.Common.Cqrs;
+using MediatR;
+
 
 using Drmc.Procurement.Application.Features.PlanningYearItems.DTO;
 using Drmc.Procurement.Application.Features.PlanningYearItems.Interfaces;
@@ -9,18 +12,17 @@ namespace Drmc.Procurement.WebApi.Controllers;
 [Route("api/[controller]")]
 public class PlanningYearItemsController : ControllerBase
 {
-    private readonly IPlanningYearItemService _service;
+    private readonly ISender _sender;
 
-    public PlanningYearItemsController(
-        IPlanningYearItemService service)
+    public PlanningYearItemsController(ISender sender)
     {
-        _service = service;
+        _sender = sender;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = await _service.GetAllAsync();
+        var result = await _sender.Send(new GetPlanningYearItemsQuery());
 
         return Ok(result);
     }
@@ -30,8 +32,8 @@ public class PlanningYearItemsController : ControllerBase
         int planningYearCategoryId)
     {
         var result =
-            await _service.GetByPlanningYearCategoryIdAsync(
-                planningYearCategoryId);
+            await _sender.Send(new GetPlanningYearItemsByCategoryQuery(
+                planningYearCategoryId));
 
         return Ok(result);
     }
@@ -39,7 +41,7 @@ public class PlanningYearItemsController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var result = await _service.GetByIdAsync(id);
+        var result = await _sender.Send(new GetPlanningYearItemQuery(id));
 
         if (result == null)
         {
@@ -55,7 +57,7 @@ public class PlanningYearItemsController : ControllerBase
     {
         try
         {
-            var result = await _service.AssignAsync(request);
+            var result = await _sender.Send(new AssignPlanningYearItemCommand(request));
 
             return CreatedAtAction(
                 nameof(GetById),
@@ -79,7 +81,7 @@ public class PlanningYearItemsController : ControllerBase
     {
         try
         {
-            var result = await _service.UpdateAsync(id, request);
+            var result = await _sender.Send(new UpdatePlanningYearItemCommand(id, request));
 
             if (result == null)
             {
@@ -99,9 +101,9 @@ public class PlanningYearItemsController : ControllerBase
         int id,
         [FromQuery] bool isActive)
     {
-        var result = await _service.SetActiveStatusAsync(
+        var result = await _sender.Send(new SetPlanningYearItemActiveStatusCommand(
             id,
-            isActive);
+            isActive));
 
         if (!result)
         {
