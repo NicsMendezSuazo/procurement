@@ -2,6 +2,9 @@
 using System.Security.Claims;
 using Drmc.Procurement.Application.Features.UserCategoryPreferences.DTO;
 using Drmc.Procurement.Application.Features.UserCategoryPreferences.Interfaces;
+using Drmc.Procurement.Application.Common.Cqrs;
+using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,12 +15,11 @@ namespace Drmc.Procurement.WebApi.Controllers;
 [Route("api/[controller]")]
 public class UserCategoryPreferencesController : ControllerBase
 {
-    private readonly IUserCategoryPreferenceService _service;
+    private readonly ISender _sender;
 
-    public UserCategoryPreferencesController(
-        IUserCategoryPreferenceService service)
+    public UserCategoryPreferencesController(ISender sender)
     {
-        _service = service;
+        _sender = sender;
     }
 
     private int? GetUserId()
@@ -39,10 +41,10 @@ public class UserCategoryPreferencesController : ControllerBase
         if (!userId.HasValue)
             return Forbid();
 
-        var preferences = await _service
-            .GetByUserAndPlanningYearAsync(
+        var preferences = await _sender.Send(
+            new GetUserCategoryPreferencesQuery(
                 userId.Value,
-                planningYearId);
+                planningYearId));
 
         return Ok(preferences);
     }
@@ -75,9 +77,9 @@ public class UserCategoryPreferencesController : ControllerBase
 
         try
         {
-            var result = await _service.SaveAsync(
+            var result = await _sender.Send(new SaveUserCategoryPreferencesCommand(
                 userId.Value,
-                request);
+                request));
 
             return Ok(result);
         }

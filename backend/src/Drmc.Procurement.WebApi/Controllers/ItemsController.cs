@@ -1,4 +1,7 @@
-﻿using Drmc.Procurement.Application.Features.Items.DTO;
+using Drmc.Procurement.Application.Common.Cqrs;
+using MediatR;
+
+using Drmc.Procurement.Application.Features.Items.DTO;
 using Drmc.Procurement.Application.Features.Items.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,29 +11,29 @@ namespace Drmc.Procurement.WebApi.Controllers;
 [Route("api/[controller]")]
 public class ItemsController : ControllerBase
 {
-    private readonly IItemService _service;
+    private readonly ISender _sender;
 
-    public ItemsController(IItemService service)
+    public ItemsController(ISender sender)
     {
-        _service = service;
+        _sender = sender;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _service.GetAllAsync());
+        return Ok(await _sender.Send(new GetItemsQuery()));
     }
 
     [HttpGet("category/{categoryId:int}")]
     public async Task<IActionResult> GetByCategoryId(int categoryId)
     {
-        return Ok(await _service.GetByCategoryIdAsync(categoryId));
+        return Ok(await _sender.Send(new GetItemsByCategoryQuery(categoryId)));
     }
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var result = await _service.GetByIdAsync(id);
+        var result = await _sender.Send(new GetItemQuery(id));
 
         if (result is null)
             return NotFound();
@@ -43,9 +46,9 @@ public async Task<IActionResult> GetByPlanningYearAndCategory(
     int planningYear,
     int categoryId)
 {
-    var result = await _service.GetByPlanningYearAndCategoryAsync(
+    var result = await _sender.Send(new GetPlanningYearCatalogueQuery(
         planningYear,
-        categoryId);
+        categoryId));
 
     return Ok(result);
 }
@@ -56,7 +59,7 @@ public async Task<IActionResult> GetByPlanningYearAndCategory(
     {
         try
         {
-            var result = await _service.CreateAsync(request);
+            var result = await _sender.Send(new CreateItemCommand(request));
 
             return CreatedAtAction(
                 nameof(GetById),
@@ -80,7 +83,7 @@ public async Task<IActionResult> GetByPlanningYearAndCategory(
     {
         try
         {
-            var result = await _service.UpdateAsync(id, request);
+            var result = await _sender.Send(new UpdateItemCommand(id, request));
 
             if (result is null)
                 return NotFound();
@@ -102,7 +105,7 @@ public async Task<IActionResult> GetByPlanningYearAndCategory(
         int id,
         [FromBody] bool isActive)
     {
-        var updated = await _service.SetActiveStatusAsync(id, isActive);
+        var updated = await _sender.Send(new SetItemActiveStatusCommand(id, isActive));
 
         if (!updated)
             return NotFound();

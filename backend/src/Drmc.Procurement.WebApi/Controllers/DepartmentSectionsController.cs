@@ -1,3 +1,6 @@
+using Drmc.Procurement.Application.Common.Cqrs;
+using MediatR;
+
 using Drmc.Procurement.Application.Features.DepartmentSections.DTO;
 using Drmc.Procurement.Application.Features.DepartmentSections.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -8,19 +11,18 @@ namespace Drmc.Procurement.WebApi.Controllers;
 [Route("api/[controller]")]
 public class DepartmentSectionsController : ControllerBase
 {
-    private readonly IDepartmentSectionService _sectionService;
+    private readonly ISender _sender;
 
-    public DepartmentSectionsController(
-        IDepartmentSectionService sectionService)
+    public DepartmentSectionsController(ISender sender)
     {
-        _sectionService = sectionService;
+        _sender = sender;
     }
 
     // GET: api/departmentsections
     [HttpGet]
     public async Task<ActionResult<List<DepartmentSectionDto>>> GetAll()
     {
-        var sections = await _sectionService.GetAllAsync();
+        var sections = await _sender.Send(new GetDepartmentSectionsQuery());
 
         return Ok(sections);
     }
@@ -30,8 +32,8 @@ public class DepartmentSectionsController : ControllerBase
     public async Task<ActionResult<List<DepartmentSectionDto>>>
         GetByDepartmentId(int departmentId)
     {
-        var sections = await _sectionService.GetByDepartmentIdAsync(
-            departmentId);
+        var sections = await _sender.Send(new GetDepartmentSectionsByDepartmentQuery(
+            departmentId));
 
         return Ok(sections);
     }
@@ -40,7 +42,7 @@ public class DepartmentSectionsController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<DepartmentSectionDto>> GetById(int id)
     {
-        var section = await _sectionService.GetByIdAsync(id);
+        var section = await _sender.Send(new GetDepartmentSectionQuery(id));
 
         if (section is null)
         {
@@ -60,7 +62,7 @@ public class DepartmentSectionsController : ControllerBase
     {
         try
         {
-            var section = await _sectionService.CreateAsync(request);
+            var section = await _sender.Send(new CreateDepartmentSectionCommand(request));
 
             return CreatedAtAction(
                 nameof(GetById),
@@ -85,7 +87,7 @@ public class DepartmentSectionsController : ControllerBase
     {
         try
         {
-            var section = await _sectionService.UpdateAsync(id, request);
+            var section = await _sender.Send(new UpdateDepartmentSectionCommand(id, request));
 
             if (section is null)
             {
@@ -113,9 +115,9 @@ public class DepartmentSectionsController : ControllerBase
         int id,
         [FromBody] bool isActive)
     {
-        var updated = await _sectionService.SetActiveStatusAsync(
+        var updated = await _sender.Send(new SetDepartmentSectionActiveStatusCommand(
             id,
-            isActive);
+            isActive));
 
         if (!updated)
         {

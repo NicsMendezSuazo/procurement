@@ -4,6 +4,9 @@ using System.Security.Claims;
 using Drmc.Procurement.Application.Features.Auth.DTO;
 using Drmc.Procurement.Application.Features.Auth.Interfaces;
 
+using Drmc.Procurement.Application.Common.Cqrs;
+using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -14,14 +17,14 @@ namespace Drmc.Procurement.WebApi.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly IAuthService _authService;
+    private readonly ISender _sender;
     private readonly IConfiguration _configuration;
 
     public AuthController(
-        IAuthService authService,
+        ISender sender,
         IConfiguration configuration)
     {
-        _authService = authService;
+        _sender = sender;
         _configuration = configuration;
     }
 
@@ -30,7 +33,7 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login(
         [FromBody] LoginRequest request)
     {
-        var user = await _authService.AuthenticateAsync(request);
+        var user = await _sender.Send(new AuthenticateCommand(request));
 
         if (user == null)
         {

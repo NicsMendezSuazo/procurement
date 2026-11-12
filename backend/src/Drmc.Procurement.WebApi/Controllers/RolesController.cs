@@ -1,3 +1,6 @@
+using Drmc.Procurement.Application.Common.Cqrs;
+using MediatR;
+
 using Drmc.Procurement.Application.Features.Roles.DTO;
 using Drmc.Procurement.Application.Features.Roles.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -8,23 +11,23 @@ namespace Drmc.Procurement.WebApi.Controllers;
 [Route("api/[controller]")]
 public class RolesController : ControllerBase
 {
-    private readonly IRoleService _service;
+    private readonly ISender _sender;
 
-    public RolesController(IRoleService service)
+    public RolesController(ISender sender)
     {
-        _service = service;
+        _sender = sender;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _service.GetAllAsync());
+        return Ok(await _sender.Send(new GetRolesQuery()));
     }
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var result = await _service.GetByIdAsync(id);
+        var result = await _sender.Send(new GetRoleQuery(id));
 
         if (result is null)
             return NotFound();
@@ -38,7 +41,7 @@ public class RolesController : ControllerBase
     {
         try
         {
-            var result = await _service.CreateAsync(request);
+            var result = await _sender.Send(new CreateRoleCommand(request));
 
             return CreatedAtAction(
                 nameof(GetById),
@@ -58,7 +61,7 @@ public class RolesController : ControllerBase
     {
         try
         {
-            var result = await _service.UpdateAsync(id, request);
+            var result = await _sender.Send(new UpdateRoleCommand(id, request));
 
             if (result is null)
                 return NotFound();
@@ -76,7 +79,7 @@ public class RolesController : ControllerBase
     {
         try
         {
-            var deleted = await _service.DeleteAsync(id);
+            var deleted = await _sender.Send(new DeleteRoleCommand(id));
 
             if (!deleted)
                 return NotFound();
